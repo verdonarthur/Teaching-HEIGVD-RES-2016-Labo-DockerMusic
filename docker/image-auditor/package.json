@@ -1,0 +1,13 @@
+{
+  "name": "AuditorApp",
+  "version": "1.0.0",
+  "description": "I can hear some music from me",
+  "author": "arthur.verdon@heig-vd.ch",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.13.3"
+  }
+}
