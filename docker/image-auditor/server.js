@@ -1,3 +1,5 @@
+
+var dgram = require('dgram');
 var server = dgram.createSocket('udp4');
 
 // Listen for emission of the "message" event.
@@ -6,7 +8,7 @@ server.on('message', function (message) {
 });
 
 // Bind to port 4000
-var port = 4000;
+var port = 9456;
 server.bind(port);
 
 server.on("listening", function () {

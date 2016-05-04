@@ -1,12 +1,17 @@
 'use strict';
 
 const express = require('express');
-var typeOfMusician = process.argv[2];
+
 // Constants
-const PORT = 8080;
+const PORT = 9456;
 
+// programm arg
+var typeOfMusician = process.argv[2];
 
-const MESSAGE_TO_SEND = function soundToSend(typeOfMusician){
+/**
+* function who define the message to send
+*/
+function soundToSend(typeOfMusician){
   switch (typeOfMusician) {
     case "piano":
       return "piano";
@@ -18,6 +23,7 @@ const MESSAGE_TO_SEND = function soundToSend(typeOfMusician){
   }
 };
 
+
 var dgram = require('dgram');
 var server = dgram.createSocket("udp4");
 server.bind();
@@ -26,7 +32,7 @@ server.bind();
 setInterval(sendSound, 3000);
 
 function sendSound() {
-    var message = new Buffer(MESSAGE_TO_SEND);
+    var message = new Buffer(soundToSend(typeOfMusician));
     server.send(message, 0, message.length, PORT, 'localhost');
     console.log("Sent " + message);
     //server.close();
