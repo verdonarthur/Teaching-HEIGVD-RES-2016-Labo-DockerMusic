@@ -1,0 +1,14 @@
+{
+  "name": "RES-Auditor",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Listen the music and list the instruments",
+  "author": "andrea.cotza@heig-vd.ch, arthur.verdon@heig-vd.ch",
+  "main": "auditor.js",
+  "scripts": {
+    "start": "node auditor.js"
+  },
+  "dependencies": {
+    "moment": "2.13.0"
+  }
+}
