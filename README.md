@@ -6,7 +6,7 @@
 * You should fork and clone this repo. You should also configure an `upstream` repo, to be able to pull updates that we will publish in this original repo.
 * There will not be a "full" lab grade for this long lab. However, there will *at least* one point to gain for the "salami" TE grade. Also, the skills that you will learn during this lab will be necessary for subsequent labs.
 * We expect that you will have more issues and questions than with other labs (because we have a left some questions open on purpose). Please ask your questions on telegram or in the forum, so that everyone in the class can benefit from the discussion.
- 
+
 ## Objectives
 
 This lab has 4 objectives:
@@ -105,15 +105,15 @@ When you connect to the TCP interface of the **Auditor**, you should receive an 
 | #  | Topic |
 | --- | --- |
 |Question | How can we represent the system in an **architecture diagram**, which gives information both about the Docker containers, the communication protocols and the commands? |
-| | *Insert your diagram here...* |
+| | ![image](images/diagram.png)|
 |Question | Who is going to **send UDP datagrams** and **when**? |
-| | The Auditor docker VM is going to send UDP datagrams each time they emit a sound |
+| | The Musician will send a UDP datagram every second. |
 |Question | Who is going to **listen for UDP datagrams** and what should happen when a datagram is received? |
-| | The Auditor are going to listen for UDP datagrams and when the datagram is receive they place the Musician who send it in the active list |
+| | The Auditor listen for UDP datatgrams. When a datagram is received the Auditor will save it and map the sound with the instrument. It will also flush the instruments inactive more than 5 seconds. |
 |Question | What **payload** should we put in the UDP datagrams? |
-| | We must put the sound of the Musician and the id of the Musician |
+| | `{"uuid": "xxx", "sound": "xxx", "timestamp": "xxx"} `|
 |Question | What **data structures** do we need in the UDP sender and receiver? When will we update these data structures? When will we query these data structures? |
-| | *Enter your response here...* |
+| | The sender has this structure: `var uuid, var sound, var timestamp`. The receiver will transform this structure into the following `var  uuid, var instrument, var activeSince` when it receive the datagram.|
 
 
 ## Task 2: implement a "musician" Node.js application
@@ -121,21 +121,21 @@ When you connect to the TCP interface of the **Auditor**, you should receive an 
 | #  | Topic
 | ---  | ---
 |Question | In a JavaScript program, if we have an object, how can we **serialize it in JSON**?
-| | We can use "JSON.stringify( THE OBJECT TO SERIALIZE );"
+| | With `JSON.stringify(object)`
 |Question | What is **npm**?
-| | *Enter your response here...*
+| | npm is a package manager for JavaScript. You can use it to install, distribute code and also manage dependencies in your projects.
 |Question | What is the `npm install` command and what is the purpose of the `--save` flag?
-| | this command install a package from the npm packet manager and --save will make the package appear in the dependencies
+| | This command installs a package, and any packages that it depends on. `--save` will make the package appear in the dependencies (inside package.json).
 |Question | How can we use the `https://www.npmjs.com/` web site?
-| | To search the package we want
+| | We can use it to search and find some packages that can be usefull to make our application.
 |Question | In JavaScript, how can we **generate a UUID** compliant with RFC4122?
-| | *Enter your response here...*
+| | We can use the package `uuid` available on npm.
 |Question | In Node.js, how can we execute a function on a **periodic** basis?
-| | *Enter your response here...*
+| | With `setInterval(callback, delay[, arg][, ...])`
 |Question | In Node.js, how can we **emit UDP datagrams**?
-| | *Enter your response here...*
+| | With the dgram module which provides an implementation of UDP Datagram sockets.
 |Question | In Node.js, how can we **access the command line arguments**?
-| | *Enter your response here...*
+| | With `process.argv`: The first element will be 'node', the second element will be the name of the JavaScript file and the next elements will be any additional command line arguments.
 
 
 ## Task 3: package the "musician" app in a Docker image
@@ -143,17 +143,17 @@ When you connect to the TCP interface of the **Auditor**, you should receive an 
 | #  | Topic
 | ---  | ---
 |Question | How do we **define and build our own Docker image**?
-| | *Enter your response here...*
+| | First we have to create a `Dockerfile`. See [Docker builder reference](https://docs.docker.com/engine/reference/builder)  and then use the command `docker build`.
 |Question | How can we use the `ENTRYPOINT` statement in our Dockerfile?
-| | *Enter your response here...*
+| | We can use it to execute our NodeJS package. It also allow to pass arguments to our package.
 |Question | After building our Docker image, how do we use it to **run containers**?
-| | *Enter your response here...*
+| |With `docker run container_name`.
 |Question | How do we get the list of all **running containers**?
-| | *Enter your response here...*
+| | With `docker ps –a`.
 |Question | How do we **stop/kill** one running container?
-| | *Enter your response here...*
+| | With `docker stop container_name`.
 |Question | How can we check that our running containers are effectively sending UDP datagrams?
-| | *Enter your response here...*
+| | With the `tcpdump` utility or Wireshark.
 
 
 ## Task 4: implement an "auditor" Node.js application
@@ -161,15 +161,15 @@ When you connect to the TCP interface of the **Auditor**, you should receive an 
 | #  | Topic
 | ---  | ---
 |Question | With Node.js, how can we listen for UDP datagrams in a multicast group?
-| | *Enter your response here...*
-|Question | How can we use the `Map` built-in object introduced in ECMAScript 6 to implement a **dictionary**? 
-| | *Enter your response here...*
-|Question | How can we use the `Moment.js` npm module to help us with **date manipulations** and formatting? 
-| | *Enter your response here...*
-|Question | When and how do we **get rid of inactive players**? 
-| | *Enter your response here...*
-|Question | How do I implement a **simple TCP server** in Node.js? 
-| | *Enter your response here...*
+| | With the event `on` in the UDP socket.
+|Question | How can we use the `Map` built-in object introduced in ECMAScript 6 to implement a **dictionary**?
+| | By creating a new `Map()` object and by adding values into it with `myMap.set(key, value);`.
+|Question | How can we use the `Moment.js` npm module to help us with **date manipulations** and formatting?
+| | We can use `moment()` to get the current time and `.format()` to format the date.
+|Question | When and how do we **get rid of inactive players**?
+| | We remove the inactive players when we receive a TCP request, just before sending the payload. To indentify the inactive players we check the `activeSince` value and if it's older than 5 second we remove it from the dictionary.
+|Question | How do I implement a **simple TCP server** in Node.js?
+| | With the `Server` class of `net` module. Which is used to create a TCP server.
 
 
 ## Task 5: package the "auditor" app in a Docker image
@@ -177,7 +177,7 @@ When you connect to the TCP interface of the **Auditor**, you should receive an 
 | #  | Topic
 | ---  | ---
 |Question | How do we validate that the whole system works, once we have built our Docker image?
-| | *Enter your response here...*
+| | We can launch an `Auditor` and some `Musician` container, make a tcp request on port `2205` and check that all the `Musician` are presents. After that we can kill one them and check if after 5 seconds it disappeared from the payload. We can also look the UDP Datagrams with `tcpdump-s0 -vv net [multicast_address]`.
 
 
 ## Constraints
@@ -203,4 +203,3 @@ Have a look at the `validate.sh` script located in the top-level directory. This
 |04.05.2016 | PM | Activities 3 and 4
 |11.05.2016 | AM | There will be a **written test** on everything that we have studied so far (travail écrit).
 |11.05.2016 | PM | Validation and demonstrations.
-

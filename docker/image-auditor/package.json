@@ -1,13 +1,14 @@
 {
-  "name": "AuditorApp",
+  "name": "RES-Auditor",
+  "private": true,
   "version": "1.0.0",
-  "description": "I can hear some music from me",
-  "author": "arthur.verdon@heig-vd.ch",
-  "main": "server.js",
+  "description": "Listen the music and list the instruments",
+  "author": "andrea.cotza@heig-vd.ch, arthur.verdon@heig-vd.ch",
+  "main": "auditor.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node auditor.js"
   },
   "dependencies": {
-    "express": "^4.13.3"
+    "moment": "2.13.0"
   }
 }
