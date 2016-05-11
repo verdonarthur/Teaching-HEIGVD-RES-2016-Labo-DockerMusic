@@ -89,7 +89,7 @@ function compareAuditorStateAgainstRunningContainers( checkDone ) {
 	 * have completed, we get their 2 return values in the 'results' array parameter.
 	 */
 	async.parallel([
-			DockerUtils.lookForMusicianContainers, 
+			DockerUtils.lookForMusicianContainers,
 			askAuditorForActiveInstruments
 		], function(err, results) {
 			var instrumentsSeenInDocker = results[0].sort();
@@ -97,7 +97,7 @@ function compareAuditorStateAgainstRunningContainers( checkDone ) {
 				return raw.instrument;
 			});
 			instrumentsSeenByAuditor.sort();
-			
+
 			/*
 			 * We use the chai.js npm module to make an assertion on the 2 results. What is seen in Docker should
 			 * be the same as what is seen by the auditor. If that's not true, then we will get an error and the
@@ -132,21 +132,21 @@ async.parallel(startContainerFunctions, function(err, results) {
 	 * We will kill 4 containers
 	 */
 	var numberOfRemainingTests = 4;
-	
+
 	/*
 	 * We wait 5 seconds before making the first check. During this check, the auditor should have detected
 	 * the 10 musicians.
 	 */
 	setTimeout(function() {
-		
+
 		/*
 		 * Check that the auditor has detected all running musicians, then schedule a new test, where we kill a
 		 * musician, wait for 8 seconds and check the status.
 		 */
 		compareAuditorStateAgainstRunningContainers(function(err, result) {
-			checkThatAuditorDetectsKilledContainer();			
+			checkThatAuditorDetectsKilledContainer();
 		});
-		
+
 		function checkThatAuditorDetectsKilledContainer() {
 			if (numberOfRemainingTests === 0) {
 				console.log("We have done all tests.");
@@ -157,12 +157,11 @@ async.parallel(startContainerFunctions, function(err, results) {
 			setTimeout(function() {
 				compareAuditorStateAgainstRunningContainers( function(err, result) {
 					console.log("Scheduling a new test");
-					checkThatAuditorDetectsKilledContainer();					
+					checkThatAuditorDetectsKilledContainer();
 				});
-			}, 8000);			
+			}, 8000);
 		}
-		
-		
-	}, 5000);
-});
 
+
+	}, 15000);
+});
