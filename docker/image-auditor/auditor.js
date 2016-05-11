@@ -62,7 +62,7 @@ UDPSocket.on('message', function(msg, info) {
 });
 
 server.on('listening', function() {
-    console.log("Now listening for TCP trafic on %s:%d", server.address(), conf.tcp_port);
+    console.log("Now listening for TCP trafic on %s:%d", server.address().address, conf.tcp_port);
 });
 
 server.on('connection', function(socket) {
