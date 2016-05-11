@@ -66,7 +66,8 @@ server.on('listening', function() {
 });
 
 server.on('connection', function(socket) {
-    socket.end(makePayload());
+    socket.write(makePayload())
+    socket.end();
     console.log("Payload sent to %s:%d", socket.remoteAddress, socket.remotePort);
 });
 
